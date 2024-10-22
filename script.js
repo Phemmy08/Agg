@@ -1,38 +1,32 @@
-// Function to calculate aggregate
-function calculateAggregate() {
-    const jambScore = parseFloat(document.getElementById('jamb').value);
-    const maths = parseFloat(document.getElementById('maths').value);
-    const english = parseFloat(document.getElementById('english').value);
-    const others1 = parseFloat(document.getElementById('others1').value);
-    const others2 = parseFloat(document.getElementById('others2').value);
-    const others4 = parseFloat(document.getElementById('others4').value);
+document.getElementById('calculateBtn').addEventListener('click', function() {
+    // Get scores from the select elements
+    const mathsScore = parseInt(document.getElementById('maths').value);
+    const englishScore = parseInt(document.getElementById('english').value);
+    const others1Score = parseInt(document.getElementById('others1').value);
+    const others2Score = parseInt(document.getElementById('others2').value);
+    const others4Score = parseInt(document.getElementById('others4').value);
 
-    // Check if jamb score is within valid range
-    if (jambScore < 0 || jambScore > 400) {
-        document.getElementById("error").textContent = "Please enter a valid UTME score (0 - 400).";
-        return;
-    }
+    // Get the UTME score
+    const utmeScore = parseInt(document.getElementById('jamb').value);
 
-    // O'Level Calculation
-    const oLevelTotal = (maths + english + others1 + others2 + others4) / 5;
-    const oLevelScore = (oLevelTotal / 100) * 25;
+    // Calculate O'level average
+    const oLevelAverage = (mathsScore + englishScore + others1Score + others2Score + others4Score) / 5;
 
-    // UTME Calculation
-    const jambScorePercent = (jambScore / 400) * 75;
+    // Calculate weighted scores
+    const utmeWeighted = (utmeScore / 400) * 75;
+    const oLevelWeighted = (oLevelAverage / 100) * 25;
 
-    // Aggregate
-    const aggregate = oLevelScore + jambScorePercent;
-    const resultElement = document.getElementById('result');
-    resultElement.textContent = `Your Aggregate Score is: ${aggregate.toFixed(2)}%`;
+    // Calculate the aggregate
+    const aggregate = utmeWeighted + oLevelWeighted;
 
-    // Add option to contact via WhatsApp
-    const whatsappLink = document.createElement('a');
-    whatsappLink.href = `https://wa.me/2348109972243?text=Hi, I calculated my aggregate and would like to get more information.`;
-    whatsappLink.textContent = "Click here to contact us on WhatsApp.";
-    whatsappLink.target = "_blank";
-    resultElement.appendChild(document.createElement('br'));
-    resultElement.appendChild(whatsappLink);
-}
+    // Display the result
+    document.getElementById('aggregateResult').innerText = aggregate.toFixed(2) + '%';
+    document.getElementById('resultSection').style.display = 'block'; // Show result section
 
-// Add event listener to the button
-document.getElementById('calculateButton').addEventListener('click', calculateAggregate);
+    // Update the WhatsApp button with your number and a pre-filled message
+    const whatsappMessage = `Hello, I just calculated my aggregate score and it is ${aggregate.toFixed(2)}%.`;
+    const whatsappNumber = '2348109972243'; // Replace with your WhatsApp number
+    document.getElementById('whatsappButton').onclick = function() {
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`);
+    };
+});
